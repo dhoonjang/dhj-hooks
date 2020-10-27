@@ -31,21 +31,21 @@ export const useToggle = <T>(
   ];
 };
 
-export const useKeyDown = (callback: (event: Event) => any) => {
+export const useKeyDown = (callback: (event: any) => any) => {
   useEffect(() => {
     window.addEventListener("keydown", callback);
     return () => window.removeEventListener("keydown", callback);
   }, [callback]);
 };
 
-export const useKeyUp = (callback: (event: Event) => any) => {
+export const useKeyUp = (callback: (event: any) => any) => {
   useEffect(() => {
     window.addEventListener("keyup", callback);
     return () => window.removeEventListener("keyup", callback);
   }, [callback]);
 };
 
-export const useScroll = (callback: (event: Event) => void) => {
+export const useScroll = (callback: (event: any) => void) => {
   useEffect(() => {
     document.addEventListener("scroll", callback);
     return () => document.removeEventListener("scroll", callback);
