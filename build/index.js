@@ -2502,38 +2502,14 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = react_development;
 }
 });
-var react_1 = react.Fragment;
-var react_2 = react.StrictMode;
-var react_3 = react.Profiler;
-var react_4 = react.Suspense;
-var react_5 = react.Children;
-var react_6 = react.Component;
-var react_7 = react.PureComponent;
-var react_8 = react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-var react_9 = react.cloneElement;
-var react_10 = react.createContext;
-var react_11 = react.createElement;
-var react_12 = react.createFactory;
-var react_13 = react.createRef;
-var react_14 = react.forwardRef;
-var react_15 = react.isValidElement;
-var react_16 = react.lazy;
-var react_17 = react.memo;
-var react_18 = react.useCallback;
-var react_19 = react.useContext;
-var react_20 = react.useDebugValue;
-var react_21 = react.useEffect;
-var react_22 = react.useImperativeHandle;
-var react_23 = react.useLayoutEffect;
-var react_24 = react.useMemo;
-var react_25 = react.useReducer;
-var react_26 = react.useRef;
-var react_27 = react.useState;
-var react_28 = react.version;
+var react_1 = react.useState;
+var react_2 = react.useEffect;
+var react_3 = react.useLayoutEffect;
+var react_4 = react.useCallback;
 
 var useTimeout = function () {
-    var _a = react_27(null), to = _a[0], setTo = _a[1];
-    react_21(function () {
+    var _a = react_1(null), to = _a[0], setTo = _a[1];
+    react_2(function () {
         return function () {
             if (to)
                 clearTimeout(to);
@@ -2545,7 +2521,7 @@ var useTimeout = function () {
     };
 };
 var useToggle = function (ref) {
-    var _a = react_27(false), state = _a[0], setState = _a[1];
+    var _a = react_1(false), state = _a[0], setState = _a[1];
     useOutsideClick(function () { return setState(false); }, ref);
     return [
         state,
@@ -2558,36 +2534,36 @@ var useToggle = function (ref) {
     ];
 };
 var useKeyDown = function (callback) {
-    react_21(function () {
+    react_2(function () {
         window.addEventListener("keydown", callback);
         return function () { return window.removeEventListener("keydown", callback); };
     }, [callback]);
 };
 var useKeyUp = function (callback) {
-    react_21(function () {
+    react_2(function () {
         window.addEventListener("keyup", callback);
         return function () { return window.removeEventListener("keyup", callback); };
     }, [callback]);
 };
 var useScroll = function (callback) {
-    react_21(function () {
+    react_2(function () {
         document.addEventListener("scroll", callback);
         return function () { return document.removeEventListener("scroll", callback); };
     }, [callback]);
 };
 var useFullscreenChange = function (callback) {
-    react_21(function () {
+    react_2(function () {
         callback();
         document.addEventListener("fullscreenchange", callback);
         return function () { return document.removeEventListener("fullscreenchange", callback); };
     }, [callback]);
 };
 var useOutsideClick = function (callback, ref) {
-    var handleOutsideClick = react_18(function (e) {
+    var handleOutsideClick = react_4(function (e) {
         if (ref.current && !ref.current.contains(e.target))
             callback(e);
     }, [callback, ref]);
-    react_21(function () {
+    react_2(function () {
         document.addEventListener("mousedown", handleOutsideClick);
         return function () {
             document.removeEventListener("mousedown", handleOutsideClick);
@@ -2603,8 +2579,8 @@ var useWindowSize = function () {
             isSemi: window.innerWidth <= 1560,
         };
     }
-    var _a = react_27(getSize), windowSize = _a[0], setWindowSize = _a[1];
-    react_21(function () {
+    var _a = react_1(getSize), windowSize = _a[0], setWindowSize = _a[1];
+    react_2(function () {
         if (!isClient)
             return;
         function handleResize() {
@@ -2617,9 +2593,9 @@ var useWindowSize = function () {
     return windowSize;
 };
 var useQuadrant = function (parentRef, cwidth, cheight, defaultQuadrant) {
-    var _a = react_27(defaultQuadrant), quadrant = _a[0], setQuadrant = _a[1];
+    var _a = react_1(defaultQuadrant), quadrant = _a[0], setQuadrant = _a[1];
     var _b = useWindowSize(), width = _b.width, height = _b.height;
-    react_23(function () {
+    react_3(function () {
         if (parentRef.current && width && height) {
             var newQuadrant = defaultQuadrant;
             var _a = parentRef.current.getBoundingClientRect(), x = _a.x, y = _a.y;
