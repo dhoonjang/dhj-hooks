@@ -11,9 +11,11 @@
   "author": "dhoonjang <dhoonjang@gmail.com>",
   "license": "MIT",
   "dependencies": {},
-  "devDependencies": {
+  "peerDependencies": {
     "@types/react": "^16.9.53",
-    "react": "^17.0.1",
+    "react": "^17.0.1"
+  },
+  "devDependencies": {
     "rollup": "^2.32.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
