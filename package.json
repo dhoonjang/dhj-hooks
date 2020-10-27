@@ -1,6 +1,6 @@
 {
   "name": "dhoonjang-s-hooks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "dhoonjang's hooks",
   "browser": "build/index.js",
   "main": "build/index.js",
@@ -12,8 +12,8 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "react": "^17.0.1",
     "@types/react": "^16.9.53",
+    "react": "^17.0.1",
     "rollup": "^2.32.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
