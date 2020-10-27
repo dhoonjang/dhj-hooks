@@ -3,7 +3,6 @@ import commonjs from "rollup-plugin-commonjs";
 import external from "rollup-plugin-peer-deps-external";
 import resolve from "rollup-plugin-node-resolve";
 import react from "react";
-import reactDom from "react-dom";
 
 import pkg from "./package.json";
 
@@ -35,7 +34,6 @@ export default {
       include: ["node_modules/**"],
       namedExports: {
         react: Object.keys(react),
-        "react-dom": Object.keys(reactDom),
         "node_modules/react/react.js": [
           "Children",
           "Component",

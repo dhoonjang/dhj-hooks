@@ -1,6 +1,6 @@
 {
   "name": "dhoonjang-s-hooks",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "dhoonjang's hooks",
   "browser": "build/index.js",
   "main": "build/index.js",
@@ -11,8 +11,7 @@
   "author": "dhoonjang <dhoonjang@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^17.0.1"
   },
   "devDependencies": {
     "@types/react": "^16.9.53",
