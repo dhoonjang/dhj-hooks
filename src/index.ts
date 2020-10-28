@@ -173,10 +173,10 @@ export function useClientRect<T = Element>(): [
 }
 
 export function useHTMLElement<T = HTMLElement>(): [
-  HTMLElement | null,
+  T | null,
   (node: T) => void
 ] {
-  const [dom, setDom] = useState<HTMLElement | null>(null);
+  const [dom, setDom] = useState<T | null>(null);
 
   const ref: (node: T) => void = useCallback((node: T) => {
     if (node !== null && node instanceof HTMLElement) {
