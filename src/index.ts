@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 
+export interface CustomEventListenerOptions extends AddEventListenerOptions {
+  initExecute?: boolean;
+}
+
 export const useTimeout = () => {
   const [to, setTo] = useState<NodeJS.Timeout | null>(null);
 
@@ -31,32 +35,16 @@ export const useToggle = <T>(
   ];
 };
 
-export const useKeyDown = (callback: (event: any) => any) => {
+export const useEventListner = <K extends keyof WindowEventMap>(
+  type: K,
+  callback: (event?: WindowEventMap[K]) => any,
+  options?: boolean | CustomEventListenerOptions
+) => {
   useEffect(() => {
-    window.addEventListener("keydown", callback);
-    return () => window.removeEventListener("keydown", callback);
-  }, [callback]);
-};
-
-export const useKeyUp = (callback: (event: any) => any) => {
-  useEffect(() => {
-    window.addEventListener("keyup", callback);
-    return () => window.removeEventListener("keyup", callback);
-  }, [callback]);
-};
-
-export const useScroll = (callback: (event: any) => void) => {
-  useEffect(() => {
-    document.addEventListener("scroll", callback);
-    return () => document.removeEventListener("scroll", callback);
-  }, [callback]);
-};
-
-export const useFullscreenChange = (callback: () => void) => {
-  useEffect(() => {
-    callback();
-    document.addEventListener("fullscreenchange", callback);
-    return () => document.removeEventListener("fullscreenchange", callback);
+    if (options && typeof options !== "boolean" && options.initExecute)
+      callback();
+    window.addEventListener(type, callback, options);
+    return () => window.removeEventListener(type, callback, options);
   }, [callback]);
 };
 
