@@ -37,6 +37,8 @@ export default {
           "useEffect",
           "useLayoutEffect",
           "useCallback",
+          "useRef",
+          "RefObject",
         ],
         "node_modules/react-dom/index.js": ["render"],
       },

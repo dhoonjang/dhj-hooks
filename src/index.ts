@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import {
+  RefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export interface CustomEventListenerOptions extends AddEventListenerOptions {
   initExecute?: boolean;
@@ -61,21 +68,36 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
   }, [callback]);
 }
 
-export function useEventListener<K extends keyof HTMLElementEventMap>(
-  element: HTMLElement | null,
-  type: K,
-  callback: (event?: HTMLElementEventMap[K]) => any,
-  options?: boolean | CustomEventListenerOptions
+export function useEventListener<T extends HTMLElement = HTMLDivElement>(
+  eventName: string,
+  handler: Function,
+  element?: RefObject<T>
 ) {
+  // Create a ref that stores handler
+  const savedHandler = useRef<Function>();
   useEffect(() => {
-    if (options && typeof options !== "boolean" && options.initExecute)
-      callback();
-    if (element) {
-      element.addEventListener(type, callback, options);
-      return () => element.removeEventListener(type, callback, options);
+    // Define the listening target
+    const targetElement: T | Window = element?.current || window;
+    if (!(targetElement && targetElement.addEventListener)) {
+      return;
     }
-    return () => {};
-  }, [callback, element]);
+    // Update saved handler if necessary
+    if (savedHandler.current !== handler) {
+      savedHandler.current = handler;
+    }
+    // Create event listener that calls handler function stored in ref
+    const eventListener = (event: Event) => {
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!savedHandler?.current) {
+        savedHandler.current(event);
+      }
+    };
+    targetElement.addEventListener(eventName, eventListener);
+    // Remove event listener on cleanup
+    return () => {
+      targetElement.removeEventListener(eventName, eventListener);
+    };
+  }, [eventName, element, handler]);
 }
 
 export function useOutsideClick(
