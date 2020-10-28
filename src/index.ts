@@ -4,7 +4,7 @@ export interface CustomEventListenerOptions extends AddEventListenerOptions {
   initExecute?: boolean;
 }
 
-export const useTimeout = () => {
+export function useTimeout() {
   const [to, setTo] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ export const useTimeout = () => {
     const to = setTimeout(callback, ms);
     setTo(to);
   };
-};
+}
 
-export const useToggle = <T>(
+export function useToggle<T>(
   ref: React.RefObject<T>
-): [boolean, (b?: boolean) => void] => {
+): [boolean, (b?: boolean) => void] {
   const [state, setState] = useState<boolean>(false);
 
   useOutsideClick(() => setState(false), ref);
@@ -33,25 +33,54 @@ export const useToggle = <T>(
       else setState(!state);
     },
   ];
-};
+}
 
-export const useEventListener = <K extends keyof WindowEventMap>(
+export function useWindowEventListener<K extends keyof WindowEventMap>(
   type: K,
   callback: (event?: WindowEventMap[K]) => any,
   options?: boolean | CustomEventListenerOptions
-) => {
+) {
   useEffect(() => {
     if (options && typeof options !== "boolean" && options.initExecute)
       callback();
     window.addEventListener(type, callback, options);
     return () => window.removeEventListener(type, callback, options);
   }, [callback]);
-};
+}
 
-export const useOutsideClick = (
+export function useDocumentEventListener<K extends keyof DocumentEventMap>(
+  type: K,
+  callback: (event?: DocumentEventMap[K]) => any,
+  options?: boolean | CustomEventListenerOptions
+) {
+  useEffect(() => {
+    if (options && typeof options !== "boolean" && options.initExecute)
+      callback();
+    document.addEventListener(type, callback, options);
+    return () => document.removeEventListener(type, callback, options);
+  }, [callback]);
+}
+
+export function useEventListener<K extends keyof HTMLElementEventMap>(
+  ref: React.RefObject<HTMLElement>,
+  type: K,
+  callback: (event?: HTMLElementEventMap[K]) => any,
+  options?: boolean | CustomEventListenerOptions
+) {
+  useEffect(() => {
+    if (options && typeof options !== "boolean" && options.initExecute)
+      callback();
+    if (ref.current) ref.current.addEventListener(type, callback, options);
+    return () => {
+      if (ref.current) ref.current.removeEventListener(type, callback, options);
+    };
+  }, [callback, ref]);
+}
+
+export function useOutsideClick(
   callback: (event: MouseEvent) => any,
   ref: React.RefObject<any>
-) => {
+) {
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target)) callback(e);
@@ -65,9 +94,9 @@ export const useOutsideClick = (
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [handleOutsideClick]);
-};
+}
 
-export const useWindowSize = () => {
+export function useWindowSize() {
   const isClient = typeof window === "object";
 
   function getSize() {
@@ -93,14 +122,14 @@ export const useWindowSize = () => {
   }, []);
 
   return windowSize;
-};
+}
 
-export const useQuadrant = (
+export function useQuadrant(
   parentRef: React.RefObject<any>,
   cwidth: number,
   cheight: number,
   defaultQuadrant: number
-) => {
+) {
   const [quadrant, setQuadrant] = useState(defaultQuadrant);
 
   const { width, height } = useWindowSize();
@@ -125,4 +154,19 @@ export const useQuadrant = (
   }, [parentRef, width, height, defaultQuadrant, cwidth, cheight]);
 
   return quadrant;
-};
+}
+
+export function useClientRect<T = Element>(): [
+  DOMRect | null,
+  (node: T) => void
+] {
+  const [rect, setRect] = useState<DOMRect | null>(null);
+
+  const ref: (node: T) => void = useCallback((node: T) => {
+    if (node !== null && node instanceof Element) {
+      setRect(node.getBoundingClientRect());
+    }
+  }, []);
+
+  return [rect, ref];
+}
