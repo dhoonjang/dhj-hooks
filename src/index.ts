@@ -35,7 +35,7 @@ export const useToggle = <T>(
   ];
 };
 
-export const useEventListner = <K extends keyof WindowEventMap>(
+export const useEventListener = <K extends keyof WindowEventMap>(
   type: K,
   callback: (event?: WindowEventMap[K]) => any,
   options?: boolean | CustomEventListenerOptions
