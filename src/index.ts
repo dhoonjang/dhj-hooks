@@ -62,7 +62,7 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
 }
 
 export function useEventListener<K extends keyof HTMLElementEventMap>(
-  ref: React.RefObject<HTMLElement>,
+  element: HTMLElement | null,
   type: K,
   callback: (event?: HTMLElementEventMap[K]) => any,
   options?: boolean | CustomEventListenerOptions
@@ -70,11 +70,12 @@ export function useEventListener<K extends keyof HTMLElementEventMap>(
   useEffect(() => {
     if (options && typeof options !== "boolean" && options.initExecute)
       callback();
-    if (ref.current) ref.current.addEventListener(type, callback, options);
-    return () => {
-      if (ref.current) ref.current.removeEventListener(type, callback, options);
-    };
-  }, [callback, ref]);
+    if (element) {
+      element.addEventListener(type, callback, options);
+      return () => element.removeEventListener(type, callback, options);
+    }
+    return () => {};
+  }, [callback, element]);
 }
 
 export function useOutsideClick(
@@ -169,4 +170,19 @@ export function useClientRect<T = Element>(): [
   }, []);
 
   return [rect, ref];
+}
+
+export function useHTMLElement<T = HTMLElement>(): [
+  HTMLElement | null,
+  (node: T) => void
+] {
+  const [dom, setDom] = useState<HTMLElement | null>(null);
+
+  const ref: (node: T) => void = useCallback((node: T) => {
+    if (node !== null && node instanceof HTMLElement) {
+      setDom(node);
+    }
+  }, []);
+
+  return [dom, ref];
 }
