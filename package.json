@@ -14,8 +14,10 @@
   "peerDependencies": {},
   "devDependencies": {
     "@types/react": "^16.9.53",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
     "eslint": "^7.12.1",
-    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "react": "^17.0.1",
     "rollup": "^2.32.1",
     "rollup-plugin-commonjs": "^10.1.0",

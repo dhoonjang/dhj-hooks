@@ -54,7 +54,7 @@ export function useWindowEventListener<K extends keyof WindowEventMap>(
       callback();
     window.addEventListener(type, callback, options);
     return () => window.removeEventListener(type, callback, options);
-  }, [callback]);
+  }, [callback, options, type]);
 }
 
 export function useDocumentEventListener<K extends keyof DocumentEventMap>(
@@ -67,16 +67,18 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
       callback();
     document.addEventListener(type, callback, options);
     return () => document.removeEventListener(type, callback, options);
-  }, [callback]);
+  }, [callback, options, type]);
 }
 
 export function useEventListener<T extends HTMLElement = HTMLDivElement>(
   eventName: string,
-  handler: Function,
+  handler: (event: Event | React.SyntheticEvent) => any,
   element?: RefObject<T>
 ) {
   // Create a ref that stores handler
-  const savedHandler = useRef<Function>();
+  const savedHandler = useRef<
+    (event: Event | React.SyntheticEvent) => any | null
+  >();
   useEffect(() => {
     // Define the listening target
     const targetElement: T | Window = element?.current || window;
@@ -145,7 +147,7 @@ export function useWindowSize() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return windowSize;
@@ -178,6 +180,7 @@ export function useQuadrant(
 
       setQuadrant(newQuadrant);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parentRef, width, height, defaultQuadrant, cwidth, cheight]);
 
   return quadrant;
