@@ -13,13 +13,5 @@
     "react-hooks/rules-of-hooks": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off"
-  },
-  "overrides": [
-    {
-      "files": ["build/**", "rollup.config.js"],
-      "rules": {
-        "no-unused-expressions": "off"
-      }
-    }
-  ]
+  }
 }
