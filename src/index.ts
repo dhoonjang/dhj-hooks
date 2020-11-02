@@ -7,6 +7,8 @@ import {
   useState,
 } from "react";
 
+export * from "./component";
+
 export interface CustomEventListenerOptions extends AddEventListenerOptions {
   initExecute?: boolean;
 }
@@ -132,7 +134,7 @@ export function useWindowSize() {
 
   const [windowSize, setWindowSize] = useState(getSize);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isClient) return;
 
     function handleResize() {
@@ -140,7 +142,9 @@ export function useWindowSize() {
     }
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
     // eslint-disable-next-line
   }, []);
 
@@ -159,7 +163,7 @@ export function useQuadrant(
 
   useLayoutEffect(() => {
     if (parentRef.current && width && height) {
-      let newQuadrant = defaultQuadrant;
+      let newQuadrant = quadrant;
       const { x, y } = parentRef.current.getBoundingClientRect();
 
       if (x + cwidth > width) {
@@ -186,25 +190,9 @@ export function useClientRect<T = Element>(): [
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   const ref: (node: T) => void = useCallback((node: T) => {
-    if (node !== null && node instanceof Element) {
+    if (node !== null && node instanceof Element)
       setRect(node.getBoundingClientRect());
-    }
   }, []);
 
   return [rect, ref];
-}
-
-export function useHTMLElement<T = HTMLElement>(): [
-  T | null,
-  (node: T) => void
-] {
-  const [dom, setDom] = useState<T | null>(null);
-
-  const ref: (node: T) => void = useCallback((node: T) => {
-    if (node !== null && node instanceof HTMLElement) {
-      setDom(node);
-    }
-  }, []);
-
-  return [dom, ref];
 }
