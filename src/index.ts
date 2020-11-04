@@ -199,3 +199,19 @@ export function useClientRect<T = Element>(): [
 
   return [rect, ref];
 }
+
+export const useCanvas = (
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+  func: (
+    context: CanvasRenderingContext2D,
+    ref: HTMLCanvasElement,
+    ...data: any
+  ) => void,
+  data?: any
+) => {
+  useEffect(() => {
+    const ctx = canvasRef.current?.getContext("2d");
+    if (ctx instanceof CanvasRenderingContext2D && canvasRef.current)
+      func(ctx, canvasRef.current, data);
+  }, [canvasRef, func, data]);
+};
