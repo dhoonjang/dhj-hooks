@@ -72,13 +72,11 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
 
 export function useEventListener<T extends HTMLElement = HTMLDivElement>(
   eventName: string,
-  handler: (event: Event | React.SyntheticEvent) => any,
+  handler: (event: any) => any,
   element?: RefObject<T>
 ) {
   // Create a ref that stores handler
-  const savedHandler = useRef<
-    (event: Event | React.SyntheticEvent) => any | null
-  >();
+  const savedHandler = useRef<(event: any) => any | null>();
   useEffect(() => {
     // Define the listening target
     const targetElement: T | Window = element?.current || window;
