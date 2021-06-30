@@ -7,20 +7,13 @@ import {
   useState,
 } from "react";
 
-export * from "./component";
-
 export interface CustomEventListenerOptions extends AddEventListenerOptions {
   initExecute?: boolean;
 }
 
-export interface IApiReturn {
-  success: boolean;
-  error?: any;
-}
-
-export function useUpdateFetch<T extends IApiReturn>(
+export function useUpdateFetch<T>(
   request: () => Promise<T>,
-  maxUpdate?: number
+  maxUpdate?: number,
 ): [T | null, (updateNum?: number) => void] {
   const [update, setUpdate] = useState<number>(1);
   const [res, setRes] = useState<T | null>(null);
@@ -28,14 +21,14 @@ export function useUpdateFetch<T extends IApiReturn>(
   useEffect(() => {
     const requestFunc = async () => {
       const response = await request();
-      if (response.success) setRes(response);
+      setRes(response);
     };
     if (update > 0 && (!maxUpdate || maxUpdate > update)) requestFunc();
   }, [update, request, maxUpdate]);
 
   const updateFunc = useCallback(
     (updateNum?: number) => setUpdate(updateNum ? updateNum : update + 1),
-    [update]
+    [update],
   );
 
   return [res, updateFunc];
@@ -57,7 +50,7 @@ export function useTimeout() {
 }
 
 export function useToggle<T>(
-  ref: React.RefObject<T>
+  ref: React.RefObject<T>,
 ): [boolean, (b?: boolean) => void] {
   const [state, setState] = useState<boolean>(false);
 
@@ -75,11 +68,10 @@ export function useToggle<T>(
 export function useWindowEventListener<K extends keyof WindowEventMap>(
   type: K,
   callback: (event?: WindowEventMap[K]) => any,
-  options?: boolean | CustomEventListenerOptions
+  options?: CustomEventListenerOptions,
 ) {
   useEffect(() => {
-    if (options && typeof options !== "boolean" && options.initExecute)
-      callback();
+    if (options && options.initExecute) callback();
     window.addEventListener(type, callback, options);
     return () => window.removeEventListener(type, callback, options);
   }, [callback, options, type]);
@@ -88,11 +80,10 @@ export function useWindowEventListener<K extends keyof WindowEventMap>(
 export function useDocumentEventListener<K extends keyof DocumentEventMap>(
   type: K,
   callback: (event?: DocumentEventMap[K]) => any,
-  options?: boolean | CustomEventListenerOptions
+  options?: CustomEventListenerOptions,
 ) {
   useEffect(() => {
-    if (options && typeof options !== "boolean" && options.initExecute)
-      callback();
+    if (options && options.initExecute) callback();
     document.addEventListener(type, callback, options);
     return () => document.removeEventListener(type, callback, options);
   }, [callback, options, type]);
@@ -100,30 +91,26 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
 
 export function useEventListener<T extends HTMLElement = HTMLDivElement>(
   eventName: string,
-  handler: (event: any) => any,
-  element?: RefObject<T>
+  handler: (event: Event) => any,
+  element?: RefObject<T> | null,
 ) {
-  // Create a ref that stores handler
-  const savedHandler = useRef<(event: any) => any | null>();
+  const savedHandler = useRef<(event: Event) => any | null>();
+
   useEffect(() => {
-    // Define the listening target
     const targetElement: T | Window = element?.current || window;
-    if (!(targetElement && targetElement.addEventListener)) {
-      return;
-    }
-    // Update saved handler if necessary
+
+    if (!(targetElement && targetElement.addEventListener)) return;
+
     if (savedHandler.current !== handler) {
       savedHandler.current = handler;
     }
-    // Create event listener that calls handler function stored in ref
+
     const eventListener = (event: Event) => {
-      // eslint-disable-next-line no-extra-boolean-cast
-      if (!!savedHandler?.current) {
-        savedHandler.current(event);
-      }
+      if (!!savedHandler.current) savedHandler.current(event);
     };
+
     targetElement.addEventListener(eventName, eventListener);
-    // Remove event listener on cleanup
+
     return () => {
       targetElement.removeEventListener(eventName, eventListener);
     };
@@ -132,13 +119,13 @@ export function useEventListener<T extends HTMLElement = HTMLDivElement>(
 
 export function useOutsideClick(
   callback: (event: MouseEvent) => any,
-  ref: React.RefObject<any>
+  ref: React.RefObject<any>,
 ) {
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target)) callback(e);
     },
-    [callback, ref]
+    [callback, ref],
   );
 
   useEffect(() => {
@@ -183,7 +170,7 @@ export function useQuadrant(
   parentRef: React.RefObject<any>,
   cwidth: number,
   cheight: number,
-  defaultQuadrant: number
+  defaultQuadrant: number,
 ) {
   const [quadrant, setQuadrant] = useState(defaultQuadrant);
 
@@ -214,7 +201,7 @@ export function useQuadrant(
 
 export function useClientRect<T = Element>(): [
   DOMRect | null,
-  (node: T) => void
+  (node: T) => void,
 ] {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
@@ -226,14 +213,14 @@ export function useClientRect<T = Element>(): [
   return [rect, ref];
 }
 
-export const useCanvas = (
+export const useCanvas2D = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   func: (
     context: CanvasRenderingContext2D,
     ref: HTMLCanvasElement,
     ...data: any
   ) => void,
-  data?: any
+  data?: any,
 ) => {
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
