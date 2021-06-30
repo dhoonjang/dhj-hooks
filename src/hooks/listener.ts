@@ -31,12 +31,12 @@ export function useDocumentEventListener<K extends keyof DocumentEventMap>(
 export function useEventListener<T extends HTMLElement = HTMLDivElement>(
   eventName: string,
   handler: (event?: Event) => any,
-  element?: RefObject<T> | null,
+  ref?: RefObject<T>,
 ) {
   const savedHandler = useRef<(event?: Event) => any | null>();
 
   useEffect(() => {
-    const targetElement: T | Window = element?.current || window;
+    const targetElement: T | Window = ref?.current || window;
 
     if (!(targetElement && targetElement.addEventListener)) return;
 
@@ -53,7 +53,7 @@ export function useEventListener<T extends HTMLElement = HTMLDivElement>(
     return () => {
       targetElement.removeEventListener(eventName, eventListener);
     };
-  }, [eventName, element, handler]);
+  }, [eventName, ref, handler]);
 }
 
 export function useOutsideClick(
