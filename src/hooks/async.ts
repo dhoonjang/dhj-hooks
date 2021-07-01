@@ -37,3 +37,23 @@ export function useTimeout() {
     setTo(to);
   };
 }
+
+export const useFlicker = (time?: number): [boolean, () => void] => {
+  const [flick, setFlick] = useState<boolean>(false);
+
+  const flickFunc = useCallback(() => {
+    setFlick(true);
+  }, []);
+
+  useEffect(() => {
+    const to = setTimeout(() => {
+      if (flick) setFlick(false);
+    }, time || 3000);
+
+    return () => {
+      clearTimeout(to);
+    };
+  }, [flick, time]);
+
+  return [flick, flickFunc];
+};

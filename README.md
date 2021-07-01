@@ -8,6 +8,7 @@
 
 - useUpdateFetch: 비동기 요청을 반복해서 요청할 수 있는 hook
 - useTimeout: timeout event를 따로 clear 할 필요 없이 Timeout 이벤트를 걸 수 있는 함수를 반환하는 hook
+- useFlicker: false --filckFunc()--> true --n초 후--> false 로 바뀌는 상태와 함수를 반환하는 hook (기본 3초)
 
 ### Listener
 
