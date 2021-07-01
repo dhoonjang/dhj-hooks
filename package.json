@@ -10,7 +10,9 @@
   "repository": "https://github.com/dhoonjang/dhoonjang-s-hooks.git",
   "author": "dhoonjang <dhoonjang@gmail.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "dhj-string": "^0.7.1"
+  },
   "peerDependencies": {},
   "devDependencies": {
     "@types/react": "^16.9.53",

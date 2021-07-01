@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useRef } from "react";
+import { Key, RefObject, useCallback, useEffect, useRef } from "react";
 
 export interface CustomEventListenerOptions extends AddEventListenerOptions {
   initExecute?: boolean;
@@ -74,3 +74,16 @@ export function useOutsideClick(
     };
   }, [handleOutsideClick]);
 }
+
+export const useKeyboardEvent = (trigger: Key[], eventFunc: () => void) => {
+  useEffect(() => {
+    const handleFunc = (e: KeyboardEvent) => {
+      e.preventDefault();
+      if (trigger.findIndex((k) => e.key === k) >= 0) eventFunc();
+    };
+    window.addEventListener("keyup", handleFunc);
+    return () => {
+      window.removeEventListener("keyup", handleFunc);
+    };
+  }, [trigger, eventFunc]);
+};
