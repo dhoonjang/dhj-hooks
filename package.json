@@ -1,6 +1,6 @@
 {
   "name": "dhj-hooks",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "dhoonjang's hooks",
   "browser": "build/index.js",
   "main": "build/index.js",
