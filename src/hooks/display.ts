@@ -27,9 +27,11 @@ export const useDomRect = <T extends HTMLElement>(
     handleResize();
 
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.addEventListener("scroll", handleResize);
     };
   }, [ref, handleResize]);
 
