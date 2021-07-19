@@ -7,8 +7,10 @@ import {
 } from "react";
 import { useOutsideClick } from "./listener";
 
-export const useDomRect = <T extends HTMLElement>(
+export const useDomRect = <T extends HTMLElement, S extends HTMLDivElement>(
   ref: RefObject<T>,
+  scrollRef?: RefObject<S>,
+  noEvent?: boolean,
 ): DOMRect | null => {
   const [rect, setRect] = useState(
     ref.current ? ref.current.getBoundingClientRect() : null,
@@ -21,19 +23,27 @@ export const useDomRect = <T extends HTMLElement>(
 
   useLayoutEffect(() => {
     const element = ref.current;
+    const scrollElement = scrollRef?.current || null;
 
-    if (!element) return;
+    if (!element || noEvent) return;
 
     handleResize();
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleResize);
 
+    if (scrollElement) {
+      scrollElement.addEventListener("scroll", handleResize);
+    }
+
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.addEventListener("scroll", handleResize);
+      window.removeEventListener("scroll", handleResize);
+      if (scrollElement) {
+        scrollElement.removeEventListener("scroll", handleResize);
+      }
     };
-  }, [ref, handleResize]);
+  }, [ref, scrollRef, noEvent, handleResize]);
 
   return rect;
 };
